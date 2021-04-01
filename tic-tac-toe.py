@@ -13,15 +13,17 @@ def check_for_win():
     wins = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]]
     
     for x,y in board.items():
-        if y == 'X':
+        if y == 'X' or y == 'O':
             for i in wins:
                 if x not in i:
                     pass
                 else:
+                    i.append(y)
                     i.remove(x)
     for b in wins:
-        if not b:
-            return True
+        if b == ['X','X','X'] or b == ['O','O','O']:
+            return b[0]
+
 
 # Player gets to choose position, which must be empty
 def player_move():
@@ -75,9 +77,13 @@ while playing:
         player_move()
         computer_turn = True
     winner = check_for_win()
-    if winner == True:
+    if winner == 'X':
         print_game()
         print('You Win')
+        break
+    elif winner == 'O':
+        print_game()
+        print('You Lose')
         break
 # Sleep then quit game
 sleep(2)
