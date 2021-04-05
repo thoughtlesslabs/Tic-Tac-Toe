@@ -4,12 +4,19 @@ from time import sleep
 
 playing = True
 computer_turn = True
+computer_wins = 0
+player_wins = 0
 board = {1:' ',2:' ',3:' ',4:' ',5:' ',6:' ',7:' ',8:' ',9:' '}
-winner = [0,1]
 
-# Check to see if there are 3 x's in a row
-# Need to add check fo Os
+def reset_game():
+    global computer_turn
+    computer_turn = True
+    board = {1:' ',2:' ',3:' ',4:' ',5:' ',6:' ',7:' ',8:' ',9:' '}
+
+# Check to see if there are 3 x's or o's in a row
 def check_for_win():
+    global player_wins
+    global computer_wins
     wins = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]]
     
     for x,y in board.items():
@@ -21,8 +28,18 @@ def check_for_win():
                     i.append(y)
                     i.remove(x)
     for b in wins:
-        if b == ['X','X','X'] or b == ['O','O','O']:
-            return b[0]
+        if b == ['X','X','X']:
+            playing_game = False
+            player_wins += 1
+            break
+        elif b == ['O','O','O']:
+            playing_game = False
+            computer_wins +=1
+            break
+        else:
+            playing_game = True
+            break
+    return playing_game
 
 
 # Player gets to choose position, which must be empty
@@ -64,27 +81,20 @@ def print_game():
     print('    ---------')
     print('7   ' + board[7] + ' | ' + board[8] + ' | ' + board[9] + '   9')
     print('\n        8')
-    print('Current selection {}:'.format(winner))
+    print('Player wins: {}'.format(player_wins))
 
 # Keep game running until winner
-while playing:
-    os.system('clear')
-    print_game()
-    if computer_turn:
-        computer_move()
-        player_go = True
-    elif player_go:
-        player_move()
-        computer_turn = True
+def playing():
+    computer_move()
+    player_move()
     winner = check_for_win()
-    if winner == 'X':
-        print_game()
-        print('You Win')
-        break
-    elif winner == 'O':
-        print_game()
-        print('You Lose')
-        break
+    if not winner:
+        print('You win')
+    print_game()
+
+playing()
+
 # Sleep then quit game
+print_game()
 sleep(2)
-playing = False
+reset_game()
