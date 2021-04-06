@@ -5,7 +5,18 @@ from time import sleep
 playing = True
 computer_turn = True
 board = {1:' ',2:' ',3:' ',4:' ',5:' ',6:' ',7:' ',8:' ',9:' '}
-winner = [0,1]
+
+def menuoptions():
+    startgame = input('Would you like to play a game? ')
+    if startgame.lower() == 'yes' or startgame.lower() == 'y':
+        resetgame()
+        return True
+    else:
+        menuoptions()
+
+def resetgame():
+    global board
+    board = {1:' ',2:' ',3:' ',4:' ',5:' ',6:' ',7:' ',8:' ',9:' '}
 
 # Check to see if there are 3 x's in a row
 # Need to add check fo Os
@@ -21,9 +32,15 @@ def check_for_win():
                     i.append(y)
                     i.remove(x)
     for b in wins:
-        if b == ['X','X','X'] or b == ['O','O','O']:
-            return b[0]
-
+        if b == ['X','X','X']:
+            endgame = False
+            champion = 'Player'
+        elif b == ['O','O','O']:
+            endgame = False
+            champion = 'Computer'
+        else:
+            continue
+    return endgame,champion
 
 # Player gets to choose position, which must be empty
 def player_move():
@@ -64,7 +81,6 @@ def print_game():
     print('    ---------')
     print('7   ' + board[7] + ' | ' + board[8] + ' | ' + board[9] + '   9')
     print('\n        8')
-    print('Current selection {}:'.format(winner))
 
 # Keep game running until winner
 while playing:
@@ -77,14 +93,13 @@ while playing:
         player_move()
         computer_turn = True
     winner = check_for_win()
-    if winner == 'X':
-        print_game()
-        print('You Win')
-        break
-    elif winner == 'O':
-        print_game()
-        print('You Lose')
-        break
-# Sleep then quit game
-sleep(2)
-playing = False
+    if winner[0]:
+        continue
+    else:
+        print('Congrats {}'.format(winner[1]))
+        sleep(5)
+    continueplaying = menuoptions()
+    if continueplaying:
+        continue
+    break
+
