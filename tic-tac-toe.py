@@ -3,6 +3,7 @@ import os
 from time import sleep
 
 board = {1:' ',2:' ',3:' ',4:' ',5:' ',6:' ',7:' ',8:' ',9:' '}
+player_wins = 0
 
 def menuoptions():
     startgame = input('Would you like to play a game? ')
@@ -33,10 +34,10 @@ def check_for_win():
     for b in wins:
         
         if b == ['X','X','X']:
-            return False,'Player'
+            return False,'Player',1
         elif b == ['O','O','O']:
-            return False,'Computer'
-    return True, None
+            return False,'Computer',None
+    return True, None, None
 
 # Player gets to choose position, which must be empty
 def player_move():
@@ -80,9 +81,11 @@ def print_game():
     print('    ---------')
     print('7   ' + board[7] + ' | ' + board[8] + ' | ' + board[9] + '   9')
     print('\n        8')
+    print('\nPlayer Wins: {}'.format(player_wins))
 
 # Keep game running until winner
 def playing():
+    global player_wins
     print_game()
     while True:
         player_move()
@@ -93,6 +96,8 @@ def playing():
         else:
             break
     print('Congrats {}'.format(winner[1]))
+    player_wins = player_wins + winner[2]
+    print_game()
     keep_playing = menuoptions()
     if keep_playing:
         playing()
