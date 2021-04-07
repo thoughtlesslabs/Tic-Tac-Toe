@@ -2,8 +2,6 @@ import random
 import os
 from time import sleep
 
-playing = True
-computer_turn = True
 board = {1:' ',2:' ',3:' ',4:' ',5:' ',6:' ',7:' ',8:' ',9:' '}
 
 def menuoptions():
@@ -12,7 +10,8 @@ def menuoptions():
         resetgame()
         return True
     else:
-        menuoptions()
+        print('Thanks for Playing')
+        exit()
 
 def resetgame():
     global board
@@ -32,35 +31,35 @@ def check_for_win():
                     i.append(y)
                     i.remove(x)
     for b in wins:
+        
         if b == ['X','X','X']:
-            endgame = False
-            champion = 'Player'
+            return False,'Player'
         elif b == ['O','O','O']:
-            endgame = False
-            champion = 'Computer'
-        else:
-            continue
-    return endgame,champion
+            return False,'Computer'
+    return True, None
 
 # Player gets to choose position, which must be empty
 def player_move():
-    global player_go
     player_go = True
-    choice = int(input('Choose a location from 1 - 9: '))
+    try:
+        choice = int(input('Choose a location from 1 - 9: '))
+    except ValueError:
+        choice = int(input('Must be a number. Try again: '))
     while player_go:
         if choice == 10:
             exit()
+        elif choice not in range(1,10):
+            choice = int(input('Number must be between 1 and 9. Try again: '))
         elif board[choice] != ' ':
             choice = int(input('Pick a unoccupied spot: '))
         else:
             board.update({choice:'X'})
             player_go = False
-    return player_go
+    print_game()
 
 # Automated computer move.
 # Needs AI
 def computer_move():
-    global computer_turn
     computer_turn = True
     while computer_turn:
         pick_spot = random.randint(1,9)
@@ -69,7 +68,7 @@ def computer_move():
         else:
             board.update({pick_spot:'O'})
             computer_turn = False
-    return computer_turn
+    print_game()
 
 # Print Game Board
 def print_game():
@@ -83,23 +82,20 @@ def print_game():
     print('\n        8')
 
 # Keep game running until winner
-while playing:
-    os.system('clear')
+def playing():
     print_game()
-    if computer_turn:
-        computer_move()
-        player_go = True
-    elif player_go:
+    while True:
         player_move()
-        computer_turn = True
-    winner = check_for_win()
-    if winner[0]:
-        continue
-    else:
-        print('Congrats {}'.format(winner[1]))
-        sleep(5)
-    continueplaying = menuoptions()
-    if continueplaying:
-        continue
-    break
+        computer_move()
+        winner = check_for_win()
+        if winner[0]:
+            continue
+        else:
+            break
+    print('Congrats {}'.format(winner[1]))
+    keep_playing = menuoptions()
+    if keep_playing:
+        playing()
+
+playing()
 
