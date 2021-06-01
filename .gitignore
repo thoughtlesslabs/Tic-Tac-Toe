@@ -2,3 +2,7 @@
 
 looptest.ipynb
 test.py
+
+
+#Ignoring virtual env
+.env
