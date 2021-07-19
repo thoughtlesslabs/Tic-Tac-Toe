@@ -18,9 +18,15 @@ def resetgame():
     global board
     board = {1:' ',2:' ',3:' ',4:' ',5:' ',6:' ',7:' ',8:' ',9:' '}
 
-# Check to see if there are 3 x's in a row
-# Need to add check fo Os
+def reset_game():
+    global computer_turn
+    computer_turn = True
+    board = {1:' ',2:' ',3:' ',4:' ',5:' ',6:' ',7:' ',8:' ',9:' '}
+
+# Check to see if there are 3 x's or o's in a row
 def check_for_win():
+    global player_wins
+    global computer_wins
     wins = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]]
     
     for x,y in board.items():
